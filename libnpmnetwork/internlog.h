@@ -1,4 +1,5 @@
-/*  Declarations of the server prototype
+/*  Prototype for the internal logger for the libnpmnetwork lib.
+    This prototype is meant to be used inside the library only.
 
     MIT License
 
@@ -22,35 +23,21 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE. */
     
-#ifndef SERVER_H_
-#define SERVER_H_
+#ifndef LIB_INTERNAL_LOG_H
+#define LIB_INTERNAL_LOG_H
 
-#include "internlog.h"
+#include <stdio.h>
+#include <stdarg.h>
 
-/* Defines the parameter needed by the server to start correctly */
-struct serverparams
-  {
-    int port;
-    int domain;
-    int type;
-    int protocol;
-    int queue;
-    void (*request_handler)(int);
-  };
+/* Print log message on the specified FILE descriptor */
+void print_log(FILE* f, char* format, va_list args);
 
-/* Create a new server and start listening. Return negative int if the server
-   cannot be started */
-extern int create_new_server(struct serverparams *__params);
+/* Print log message on the stdout file descriptor */
+void print_info(char* format, ...);
 
-/* Create a new server socket descriptor and returns it. Return negative int
-   if cannot create a socket */
-extern int open_server_socket(int __port, int __domain, int __type, int __protocol);
+/* Print log message on the stderr file descriptor */
+void print_error(char* format, ...);
 
-/* Listen and accept new connection, must have an opened SOCKET */
-extern void listen_and_accept(int __socket, int __queue, void (*__handler)(int));
-
-/* Set the SIGTERM handler. This is optional and the client can choose to
-   handle the signal. */
-extern void set_sigterm_handler(int  __socket);
+void enable_log(int enabled);
 
 #endif

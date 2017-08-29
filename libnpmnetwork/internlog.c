@@ -1,4 +1,5 @@
-/*  Declarations of the server prototype
+/*  Prototype for the internal logger for the libnpmnetwork lib.
+    This prototype defines a client that can connect to a server.
 
     MIT License
 
@@ -21,36 +22,39 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE. */
-    
-#ifndef SERVER_H_
-#define SERVER_H_
 
+#include <stdio.h>
+#include <stdarg.h>
 #include "internlog.h"
 
-/* Defines the parameter needed by the server to start correctly */
-struct serverparams
-  {
-    int port;
-    int domain;
-    int type;
-    int protocol;
-    int queue;
-    void (*request_handler)(int);
-  };
+int g_logEnabled = 0;
 
-/* Create a new server and start listening. Return negative int if the server
-   cannot be started */
-extern int create_new_server(struct serverparams *__params);
+void print_log(FILE* f, char* format, va_list args)
+{
+    if (g_logEnabled != 0) 
+    {
+        vfprintf(f, format, args);
+        fprintf(f, "\n");
+    }  
+}
 
-/* Create a new server socket descriptor and returns it. Return negative int
-   if cannot create a socket */
-extern int open_server_socket(int __port, int __domain, int __type, int __protocol);
+void print_info(char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    print_log(stdout, format, args);
+    va_end(args);
+} 
 
-/* Listen and accept new connection, must have an opened SOCKET */
-extern void listen_and_accept(int __socket, int __queue, void (*__handler)(int));
+void print_error(char* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    print_log(stderr, format, args);
+    va_end(args);
+} 
 
-/* Set the SIGTERM handler. This is optional and the client can choose to
-   handle the signal. */
-extern void set_sigterm_handler(int  __socket);
-
-#endif
+void enable_log(int enabled) 
+{
+    g_logEnabled = enabled;
+}

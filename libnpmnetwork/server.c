@@ -28,7 +28,6 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-#include <stdarg.h>
 #include <sys/un.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -42,12 +41,6 @@ const int8_t ERR_CANNOT_CREATE_SOCKET  = -2;
 /* catching termination signal to cleanup */
 void close_resources(int signum);
 int g_serverSocket;
-
-/* console printing utils function */
-int8_t g_logEnabled = 0;
-void print_log(FILE* f, char* format, va_list args);
-void print_info(char* format, ...);
-void print_error(char* format, ...);
 
 int create_new_server(struct serverparams *params) 
 {
@@ -140,32 +133,4 @@ void close_resources(int signum)
     close(g_serverSocket);
 }
 
-void print_log(FILE* f, char* format, va_list args)
-{
-    if (g_logEnabled != 0) 
-    {
-        vfprintf(f, format, args);
-        fprintf(f, "\n");
-    }  
-}
 
-void print_info(char* format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    print_log(stdout, format, args);
-    va_end(args);
-} 
-
-void print_error(char* format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    print_log(stderr, format, args);
-    va_end(args);
-} 
-
-void enable_log(int enabled) 
-{
-    g_logEnabled = enabled;
-}
