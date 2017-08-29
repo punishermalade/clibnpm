@@ -106,6 +106,7 @@ size_t waiting_data_from_host(int socket, byte** content, int block)
         memcpy(temp + totalByteRead, buffer, byteRead);
         *content = temp;
         totalByteRead += byteRead;
+        
     }
     
     return totalByteRead;
