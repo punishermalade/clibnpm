@@ -55,4 +55,7 @@ extern void set_buffer_size(uint32_t __size);
 /* Display a log message in stdout */
 extern void logmsg(LogLevel __loglevel, char* __format , ...);
 
+/* Display a byte array in the standard output */
+extern void print_byte_array(unsigned char *data, size_t len);
+
 #endif

@@ -30,15 +30,19 @@
 #include <sys/types.h>
 #include "logger.h"
 
+/* define to remove the logger entirely from the source code */
+#ifdef LOGGER_DISABLE
+#define logmsg(...)
+#endif
+
 /* default values and constant */
-uint32_t    g_bufferSize        = DEFAULT_BUFFER_SIZE;
-LogLevel    g_logPriority       = LOGGER_INFO;
-const char* TIMESTAMP_FORMAT    = "%Y-%m-%d %H:%M:%S";
-const char* LOG_MSG_FORMAT      = "%s [%d] [%d]: %s\n";
+uint32_t    g_bufferSize            = DEFAULT_BUFFER_SIZE;
+LogLevel    g_logPriority           = LOGGER_INFO;
+const char* TIMESTAMP_FORMAT        = "%Y-%m-%d %H:%M:%S";
+const char* LOG_MSG_FORMAT_PREFIX   = "%s [%d] [%d]: ";
 
 void logmsg(LogLevel priority, char* format, ...) 
 {
-#ifndef LOGGER_DISABLE
     if (priority <= g_logPriority)
     {
         time_t timer;
@@ -48,17 +52,18 @@ void logmsg(LogLevel priority, char* format, ...)
         tm_info = localtime(&timer);
         strftime(tsBuffer, 26, TIMESTAMP_FORMAT, tm_info);
     
-        pid_t pid = getpid();
-    
+        // print the beginning of the log message
+        printf(LOG_MSG_FORMAT_PREFIX, tsBuffer, priority, getpid());
+        
+        // print the actual message from the caller
         va_list args;
         va_start(args, format);
-        char buffer[g_bufferSize];
-        vsprintf(buffer, format, args);
+        printf(format, args);
         va_end(args);
         
-        printf(LOG_MSG_FORMAT, tsBuffer, priority, pid, buffer);
+        // end of line
+        printf("\n");
     }
-#endif
 }
 
 void set_buffer_size(uint32_t size)
@@ -80,3 +85,17 @@ void set_priority(LogLevel priority)
         g_logPriority = priority;
     }
 }
+
+void print_byte_array(unsigned char *data, size_t len)
+{
+    int i;
+    for (i = 0; i < len; i++)
+    {
+        printf("%02X", *data);
+        data++;
+    }
+    
+    printf("\n");
+}
+
+
