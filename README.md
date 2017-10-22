@@ -10,6 +10,14 @@ decision was driven by the desire to have portable executable. That will
 make a final executable bigger in size but it will be able to run 
 without worrying about runtime dependencies.
 
+libnpmcrypto
+-------------------------------------
+Based on the LibTomCrypt cryptographic library, this package contains a
+simplified code base. The goal is to let the developer choose the 
+encryption algorithms that it only needs. Just copy the header file
+with the corresponding source file and compile it with the target
+project.
+
 libnpmtoolkit
 -------------------------------------
 Provides a logger and a stringutils module. The logger follows the
