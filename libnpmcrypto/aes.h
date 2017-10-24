@@ -1,34 +1,31 @@
-/*
-    aes.h
-    Prototypes for the AES cipher. The aim is to have a lighweight 
-    library that only has what is needed to do AES encryptions.
-    
-    Based on the LibTomCrypt library.
-    
-    MIT License
+/* LibTomCrypt, modular cryptographic library -- Tom St Denis
+ *
+ * LibTomCrypt is a library that provides various cryptographic
+ * algorithms in a highly modular and flexible manner.
+ *
+ * The library is free for all purposes without any express
+ * guarantee it works.
+ */
 
-    Copyright (c) [2017] [Neilson P. Marcil]
+/* AES implementation by Tom St Denis
+ *
+ * Derived from the Public Domain source code by
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
+---
+  * rijndael-alg-fst.c
+  *
+  * @version 3.0 (December 2000)
+  *
+  * Optimised ANSI C code for the Rijndael cipher (now AES)
+  *
+  * @author Vincent Rijmen <vincent.rijmen@esat.kuleuven.ac.be>
+  * @author Antoon Bosselaers <antoon.bosselaers@esat.kuleuven.ac.be>
+  * @author Paulo Barreto <paulo.barreto@terra.com.br>
+---
+ */
 
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE. */
-
-#ifndef NPM_LIB_AES_H_
-#define NPM_LIB_AES_H_
+#ifndef SRC_AES_H_
+#define SRC_AES_H_
 
 #include "crypto.h"
 
@@ -57,4 +54,4 @@ extern int aes_ecb_decrypt(unsigned char *data, unsigned int len, unsigned char 
 int aes_cbc_encrypt(unsigned char *data, unsigned char *iv, unsigned int size, aes_key *key);
 int aes_cbc_decrypt(unsigned char *data, unsigned int size, aes_key *key);
 
-#endif /* NPM_LIB_AES_H_ */
+#endif /* SRC_AES_H_ */

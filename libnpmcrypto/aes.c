@@ -1,30 +1,28 @@
-/*
-    aes.c
-    Implementation of the AES cipher.
-    
-    ** Based on the LibTomCrypt library **
-    
-    MIT License
+/* LibTomCrypt, modular cryptographic library -- Tom St Denis
+ *
+ * LibTomCrypt is a library that provides various cryptographic
+ * algorithms in a highly modular and flexible manner.
+ *
+ * The library is free for all purposes without any express
+ * guarantee it works.
+ */
 
-    Copyright (c) [2017] [Neilson P. Marcil]
+/* AES implementation by Tom St Denis
+ *
+ * Derived from the Public Domain source code by
 
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE. */
+---
+  * rijndael-alg-fst.c
+  *
+  * @version 3.0 (December 2000)
+  *
+  * Optimised ANSI C code for the Rijndael cipher (now AES)
+  *
+  * @author Vincent Rijmen <vincent.rijmen@esat.kuleuven.ac.be>
+  * @author Antoon Bosselaers <antoon.bosselaers@esat.kuleuven.ac.be>
+  * @author Paulo Barreto <paulo.barreto@terra.com.br>
+---
+ */
 
 #include <string.h>
 #include "aes.h"
@@ -184,7 +182,7 @@ int aes_ecb_block_encrypt(unsigned char *pt, unsigned char *ct, aes_key *key)
 	rk = key->eK;
 
 	/*
-	 * map byte array block to cipher state
+	 * map BYTE array block to cipher state
 	 * and add initial round key:
 	 */
 	LOAD32H(s0, pt      ); s0 ^= rk[0];
@@ -255,7 +253,7 @@ int aes_ecb_block_encrypt(unsigned char *pt, unsigned char *ct, aes_key *key)
 
 	/*
 	 * apply last round and
-	 * map cipher state to byte array block:
+	 * map cipher state to BYTE array block:
 	 */
 	s0 =
 		(Te4_3[BYTE(t0, 3)]) ^
@@ -299,7 +297,7 @@ int aes_ecb_block_decrypt(unsigned char *ct, unsigned char *pt, aes_key *key)
 	rk = key->dK;
 
 	/*
-	 * map byte array block to cipher state
+	 * map BYTE array block to cipher state
 	 * and add initial round key:
 	 */
 	LOAD32H(s0, ct      ); s0 ^= rk[0];
@@ -371,7 +369,7 @@ int aes_ecb_block_decrypt(unsigned char *ct, unsigned char *pt, aes_key *key)
 	}
 	/*
 	 * apply last round and
-	 * map cipher state to byte array block:
+	 * map cipher state to BYTE array block:
 	 */
 	s0 =
 		(Td4[BYTE(t0, 3)] & 0xff000000) ^
