@@ -198,3 +198,12 @@ int sha256_done(hash_state * md, unsigned char *out)
 
     return CRYPTO_OK;
 }
+
+/**
+   Hash an input
+   @param in     The data to hash
+   @param inlen  The length of the data (octets)
+   @oaram out	 The output buffer
+   @return CRYPTO_OK if successful
+*/
+HASH_WRAPPER(sha256_hash, sha256_init, sha256_process, sha256_done)

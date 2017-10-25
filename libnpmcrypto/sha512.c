@@ -191,3 +191,12 @@ int sha512_done(hash_state * md, unsigned char *out)
 
     return CRYPTO_OK;
 }
+
+/**
+   Hash an input
+   @param in     The data to hash
+   @param inlen  The length of the data (octets)
+   @oaram out	 The output buffer
+   @return CRYPTO_OK if successful
+*/
+HASH_WRAPPER(sha512_hash, sha512_init, sha512_process, sha512_done)

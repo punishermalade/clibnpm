@@ -11,6 +11,14 @@
 
 #include "crypto.h"
 
+/* default size of the hashes */
+enum {
+	MD5_HASH_SIZE = 16,
+	SHA1_HASH_SIZE = 20,
+	SHA256_HASH_SIZE = 32,
+	SHA512_HASH_SIZE = 64
+};
+
 struct md5_state {
     ulong64 length;
     ulong32 state[4], curlen;
@@ -44,24 +52,35 @@ typedef union u_hash_state {
     void *data;
 } hash_state;
 
+/* MD5 functions */
 int md5_init(hash_state * md);
 int md5_process(hash_state * md, const unsigned char *in, unsigned long inlen);
 int md5_done(hash_state * md, unsigned char *hash);
 
+/* SHA1 functions */
 int sha1_init(hash_state * md);
 int sha1_process(hash_state * md, const unsigned char *in, unsigned long inlen);
 int sha1_done(hash_state * md, unsigned char *hash);
 
+/* SHA256 */
 int sha256_init(hash_state * md);
 int sha256_process(hash_state * md, const unsigned char *in, unsigned long inlen);
 int sha256_done(hash_state * md, unsigned char *hash);
 
+/* SHA512 */
 int sha512_init(hash_state * md);
 int sha512_process(hash_state * md, const unsigned char *in, unsigned long inlen);
 int sha512_done(hash_state * md, unsigned char *hash);
 
+/* Wrapper functions for each hash, instead of making 3 calls, only one is necessary */
+int md5_hash(const unsigned char *in, unsigned long inlen, unsigned char *out);
+int sha1_hash(const unsigned char *in, unsigned long inlen, unsigned char *out);
+int sha256_hash(const unsigned char *in, unsigned long inlen, unsigned char *out);
+int sha512_hash(const unsigned char *in, unsigned long inlen, unsigned char *out);
+
+/* general algo that process the hash */
 #define HASH_PROCESS(func_name, compress_name, state_var, block_size)                       \
-int func_name (hash_state * md, const unsigned char *in, unsigned long inlen)                \
+int func_name (hash_state * md, const unsigned char *in, unsigned long inlen)               \
 {                                                                                           \
     unsigned long n;                                                                        \
     int           err;                                                                      \
@@ -95,6 +114,30 @@ int func_name (hash_state * md, const unsigned char *in, unsigned long inlen)   
        }                                                                                    \
     }                                                                                       \
     return CRYPTO_OK;                                                                       \
+}
+
+/* wrapper algo for any hash function. It will result in one function call
+ * to be done to get the final result
+ */
+#define HASH_WRAPPER(funcname, init, process, done)										  \
+int funcname (const unsigned char *in, unsigned long inlen, unsigned char *out)			  \
+{																					 	  \
+	int result = CRYPTO_OK;																  \
+	hash_state md;																		  \
+																						  \
+	if ((result = init (&md)) != CRYPTO_OK) {											  \
+		return result;																      \
+	}																					  \
+																						  \
+	if ((result = process (&md, in, inlen)) != CRYPTO_OK) {								  \
+		return result;																      \
+	}																					  \
+																				          \
+	if ((result = done (&md, out)) != CRYPTO_OK) {								  		  \
+		return result;																      \
+	}																					  \
+																						  \
+	return CRYPTO_OK;																	  \
 }
 
 #endif /* SRC_SHA_H_ */

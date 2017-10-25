@@ -189,3 +189,12 @@ int md5_done(hash_state * md, unsigned char *out)
 
     return CRYPTO_OK;
 }
+
+/**
+   Hash an input
+   @param in     The data to hash
+   @param inlen  The length of the data (octets)
+   @oaram out	 The output buffer
+   @return CRYPTO_OK if successful
+*/
+HASH_WRAPPER(md5_hash, md5_init, md5_process, md5_done)

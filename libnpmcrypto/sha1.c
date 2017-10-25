@@ -166,3 +166,12 @@ int sha1_done(hash_state * md, unsigned char *out)
 
     return CRYPTO_OK;
 }
+
+/**
+   Hash an input
+   @param in     The data to hash
+   @param inlen  The length of the data (octets)
+   @oaram out	 The output buffer
+   @return CRYPTO_OK if successful
+*/
+HASH_WRAPPER(sha1_hash, sha1_init, sha1_process, sha1_done)
