@@ -24,6 +24,7 @@
  */
 #define CONDITION_CHECK(a, x) { if (!(a)) { return x; } }
 #define BYTE(x, n) (((x) >> (8 * (n))) & 255)
+#define MAXBLOCKSIZE 128
 
 /*
  * ================================================================
@@ -40,7 +41,12 @@ enum {
 
 	// SHA
 	CRYPTO_INVALID_ARG,
-	CRYPTO_HASH_OVERFLOW
+	CRYPTO_HASH_OVERFLOW,
+
+	// PRNG
+	CRYPTO_ERROR,
+	CRYPTO_BUFFER_OVERFLOW,
+	CRYPTO_MEMORY
 };
 
 /*
@@ -161,5 +167,13 @@ do { x = (((ulong64)((y)[0] & 255))<<56)|(((ulong64)((y)[1] & 255))<<48) | \
 #ifndef MIN
    #define MIN(x, y) ( ((x)<(y))?(x):(y) )
 #endif
+
+/* no threading is used */
+#define MUTEX_GLOBAL(x)
+#define MUTEX_PROTO(x)
+#define MUTEX_TYPE(x)
+#define MUTEX_INIT(x)
+#define MUTEX_LOCK(x)
+#define MUTEX_UNLOCK(x)
 
 #endif /* SRC_CRYPTO_H_ */

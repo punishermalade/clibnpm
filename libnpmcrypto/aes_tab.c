@@ -301,25 +301,6 @@ static const ulong32 Td4[256] = {
 
 #endif /* ENCRYPT_ONLY */
 
-#ifdef LTC_SMALL_CODE
-
-#define Te0(x) TE0[x]
-#define Te1(x) RORc(TE0[x], 8)
-#define Te2(x) RORc(TE0[x], 16)
-#define Te3(x) RORc(TE0[x], 24)
-
-#define Td0(x) TD0[x]
-#define Td1(x) RORc(TD0[x], 8)
-#define Td2(x) RORc(TD0[x], 16)
-#define Td3(x) RORc(TD0[x], 24)
-
-#define Te4_0 0x000000FF & Te4
-#define Te4_1 0x0000FF00 & Te4
-#define Te4_2 0x00FF0000 & Te4
-#define Te4_3 0xFF000000 & Te4
-
-#else
-
 #define Te0(x) TE0[x]
 #define Te1(x) TE1[x]
 #define Te2(x) TE2[x]
@@ -1015,15 +996,9 @@ static const ulong32 Tks3[] = {
 
 #endif /* ENCRYPT_ONLY */
 
-#endif /* SMALL CODE */
-
 static const ulong32 rcon[] = {
     0x01000000UL, 0x02000000UL, 0x04000000UL, 0x08000000UL,
     0x10000000UL, 0x20000000UL, 0x40000000UL, 0x80000000UL,
     0x1B000000UL, 0x36000000UL, /* for 128-bit blocks, Rijndael never uses more than 10 rcon values */
 };
 
-
-/* ref:         HEAD -> master, tag: v1.18.0 */
-/* git commit:  0676c9aec7299f5c398d96cbbb64f7e38f67d73f */
-/* commit time: 2017-10-10 15:51:36 +0200 */
