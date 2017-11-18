@@ -10,6 +10,31 @@ decision was driven by the desire to have portable executable. That will
 make a final executable bigger in size but it will be able to run 
 without worrying about runtime dependencies.
 
+libnpmcrypto
+-------------------------------------
+Based on the LibTomCrypt cryptographic library, this package contains a
+simplified code base. The goal is to let the developer choose the 
+encryption algorithms that it only needs. Just copy the header file
+with the corresponding source file and compile it with the target
+project.
+
+This library is ideal when all the source code needs to be included
+at compilation time and not having a distinct static library for crypto
+operation.
+
+*Ciphers*
+Advanced Encryption Standard (ECB, CBC modes)
+
+*Digest*
+MD5
+SHA1
+SHA256
+SHA512
+
+*Pseudo-Random Number Generation*
+Fortuna
+
+
 libnpmtoolkit
 -------------------------------------
 Provides a logger and a stringutils module. The logger follows the
