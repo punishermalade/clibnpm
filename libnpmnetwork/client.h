@@ -60,6 +60,6 @@ extern int send_data_to_host(int __socket, byte* __data, size_t __length);
 
 /* Wait and read any data sent from the SOCKET. Memory will be allocated 
    and the data copied in CONTENT. */
-extern size_t waiting_data_from_host(int __socket, byte** __content, int __block);
+extern size_t waiting_data_from_host(int socket, byte** content, int block);
 
 #endif

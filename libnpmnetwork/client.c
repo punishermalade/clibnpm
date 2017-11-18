@@ -23,6 +23,7 @@
     SOFTWARE. */
 
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <netdb.h>
 #include <sys/un.h>
@@ -79,7 +80,7 @@ extern int connect_to_host(struct addrinfo* hostinfo)
 
 int send_data_to_host(int socket, byte* content, size_t len)
 {
-    size_t byteSent = 0;
+    int byteSent = 0;
     
     if ((byteSent = send(socket, content, len, 0)) < 0)
     {
