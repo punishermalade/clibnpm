@@ -173,7 +173,7 @@ int aes_key_setup(unsigned char *key, unsigned int keylen, aes_key *skey)
 	return CRYPTO_OK;
 }
 
-int aes_ecb_block_encrypt(unsigned char *pt, unsigned char *ct, aes_key *key)
+int aes_block_encrypt(unsigned char *pt, unsigned char *ct, aes_key *key)
 {
 	ulong32 s0, s1, s2, s3, t0, t1, t2, t3, *rk;
 	int Nr, r;
@@ -288,7 +288,7 @@ int aes_ecb_block_encrypt(unsigned char *pt, unsigned char *ct, aes_key *key)
 
 }
 
-int aes_ecb_block_decrypt(unsigned char *ct, unsigned char *pt, aes_key *key)
+int aes_block_decrypt(unsigned char *ct, unsigned char *pt, aes_key *key)
 {
 	ulong32 s0, s1, s2, s3, t0, t1, t2, t3, *rk;
 	int Nr, r;
@@ -415,8 +415,8 @@ int aes_ecb_encrypt(unsigned char *data, unsigned int len, unsigned char *out, a
 
 	for (i = 0; i < num_block; i++)
 	{
-		aes_ecb_block_encrypt(data, temp, key);
-		memcpy(out, temp, 16);
+		aes_block_encrypt(data, temp, key);
+		XMEMCPY(out, temp, 16);
 		out += 16;
 	}
 
@@ -435,10 +435,84 @@ int aes_ecb_decrypt(unsigned char *data, unsigned int len, unsigned char *out, a
 
 	for (i = 0; i < num_block; i++)
 	{
-		aes_ecb_block_decrypt(data, temp, key);
-		memcpy(out, temp, 16);
+		aes_block_decrypt(data, temp, key);
+		XMEMCPY(out, temp, 16);
 		out += 16;
 	}
+
+	return CRYPTO_OK;
+}
+
+int aes_cbc_encrypt(unsigned char *data, unsigned char *iv, unsigned int len, unsigned char *out, aes_key *key)
+{
+	int i;
+	unsigned int num_block;
+	unsigned char temp[16];
+	unsigned char tempXor[16];
+	unsigned char tempIv[16];
+
+	CONDITION_CHECK((len > 0), CRYPTO_INVALID_DATA_SIZE);
+	CONDITION_CHECK((len % 16 == 0), CRYPTO_INVALID_DATA_SIZE)
+
+	// init the block number and first IV
+	num_block = len / 16;
+	XMEMCPY(tempIv, iv, 16);
+
+	for (i = 0; i < num_block; i++)
+	{
+		// encrypt 16 bytes of data
+		XOR(data, 16, tempIv, 16, tempXor);
+		aes_block_encrypt(tempXor, temp, key);
+
+		// add this to output, move pointer
+		XMEMCPY(out, temp, 16);
+		data += 16;
+		out += 16;
+
+		// setting up the next IV
+		XMEMCPY(tempIv, temp, 16);
+	}
+
+	// cleanup
+	ZEROMEM(temp, 16);
+	ZEROMEM(tempXor, 16);
+	ZEROMEM(tempIv, 16);
+
+	return CRYPTO_OK;
+}
+
+int aes_cbc_decrypt(unsigned char *data, unsigned char *iv, unsigned int len, unsigned char *out, aes_key *key)
+{
+	int i;
+	unsigned int num_block;
+	unsigned char temp[16];
+	unsigned char tempIv[16];
+	unsigned char tempXor[16];
+
+	CONDITION_CHECK((len > 0), CRYPTO_INVALID_DATA_SIZE);
+	CONDITION_CHECK((len % 16 == 0), CRYPTO_INVALID_DATA_SIZE);
+
+	num_block = len / 16;
+	XMEMCPY(tempIv, iv, 16);
+
+	for (i = 0; i < num_block; i++)
+	{
+		// decrypt 16 bytes and xor it
+		aes_block_decrypt(data, temp, key);
+		XOR(temp, 16, tempIv, 16, tempXor);
+
+		// copy the result
+		XMEMCPY(out, tempXor, 16);
+		out += 16;
+
+		// get the next IV
+		XMEMCPY(tempIv, data, 16);
+		data += 16;
+	}
+
+	ZEROMEM(temp, 16);
+	ZEROMEM(tempIv, 16);
+	ZEROMEM(tempXor, 16);
 
 	return CRYPTO_OK;
 }

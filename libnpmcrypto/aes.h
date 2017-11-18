@@ -39,10 +39,10 @@ typedef struct {
 extern int aes_key_setup(unsigned char *key, unsigned int size, aes_key *sKey);
 
 /* encrypt a block of text that must be 16 bytes*/
-extern int aes_ecb_block_encrypt(unsigned char *data, unsigned char *out, aes_key *key);
+extern int aes_block_encrypt(unsigned char *data, unsigned char *out, aes_key *key);
 
 /* decrypt a block of text that must be 16 bytes */
-extern int aes_ecb_block_decrypt(unsigned char *data, unsigned char *out, aes_key *key);
+extern int aes_block_decrypt(unsigned char *data, unsigned char *out, aes_key *key);
 
 /* encrypt multiple block with ECB mode. The data length must be a multiple of 16 */
 extern int aes_ecb_encrypt(unsigned char *data, unsigned int len, unsigned char *out, aes_key *key);
@@ -50,8 +50,10 @@ extern int aes_ecb_encrypt(unsigned char *data, unsigned int len, unsigned char 
 /* decrypt multiple block with ECB mode. The data length must be a multiple of 16 */
 extern int aes_ecb_decrypt(unsigned char *data, unsigned int len, unsigned char *out, aes_key *key);
 
-/* for later */
-int aes_cbc_encrypt(unsigned char *data, unsigned char *iv, unsigned int size, aes_key *key);
-int aes_cbc_decrypt(unsigned char *data, unsigned int size, aes_key *key);
+/* encrypt multiple block using the CBC mode. IV is mandatory */
+extern int aes_cbc_encrypt(unsigned char *data, unsigned char *iv, unsigned int len, unsigned char *out, aes_key *key);
+
+/* decrypt multiple block using the CBC mode. IV is mandatory */
+extern int aes_cbc_decrypt(unsigned char *data, unsigned char *iv, unsigned int len, unsigned char *out, aes_key *key);
 
 #endif /* SRC_AES_H_ */

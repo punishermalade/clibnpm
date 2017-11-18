@@ -46,7 +46,12 @@ enum {
 	// PRNG
 	CRYPTO_ERROR,
 	CRYPTO_BUFFER_OVERFLOW,
-	CRYPTO_MEMORY
+	CRYPTO_MEMORY,
+
+	// RSA
+	CRYPTO_INVALID_FUNCTOR,
+	CRYPTO_INVALID_PRIME_SIZE,
+	CRYPTO_ERROR_READPRNG
 };
 
 /*
@@ -85,6 +90,22 @@ enum {
 #ifndef XMEMCMP
 #define XMEMCMP  memcmp
 #endif
+
+/*
+ * ================================================================
+ * Utility functions
+ * ================================================================
+ */
+
+/* perform a XOR */
+#define XOR(a, b, c, d, e) 											\
+	int i;															\
+	for (i = 0; i < b; i++) { 										\
+		e[i] = a[i % b] ^ c[i % d];									\
+	}																\
+
+/* set the value 0x00 in the specified memory area */
+#define ZEROMEM(a, b) XMEMSET(a, 0x00, b)
 
 /*
  * ================================================================

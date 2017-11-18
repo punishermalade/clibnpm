@@ -18,6 +18,23 @@ encryption algorithms that it only needs. Just copy the header file
 with the corresponding source file and compile it with the target
 project.
 
+This library is ideal when all the source code needs to be included
+at compilation time and not having a distinct static library for crypto
+operation.
+
+*Ciphers*
+Advanced Encryption Standard (ECB, CBC modes)
+
+*Digest*
+MD5
+SHA1
+SHA256
+SHA512
+
+*Pseudo-Random Number Generation*
+Fortuna
+
+
 libnpmtoolkit
 -------------------------------------
 Provides a logger and a stringutils module. The logger follows the
