@@ -39,7 +39,7 @@ int get_file_path(char *path, char *file, char out[])
 
 	if (path == NULL || file == NULL)
 	{
-		return -1;
+		return INVALID_ARGUMENT;
 	}
 
 	// need some sizes for appending
@@ -51,7 +51,7 @@ int get_file_path(char *path, char *file, char out[])
 	// size 0 is not good
 	if (path_len == 0 || file_len == 0)
 	{
-		return -2;
+		return INVALID_ARGUMENT;
 	}
 
 	// need the NULL terminated character
@@ -70,7 +70,7 @@ int get_file_path(char *path, char *file, char out[])
 	}
 
 	out[i++] = NULL_TERMINATING;
-	return 0;
+	return OK;
 }
 
 int append_to_file(char *file, char *content)
@@ -83,11 +83,49 @@ int append_to_file(char *file, char *content)
 	FILE *file_ptr = fopen(file, "a");
 	if (file_ptr == NULL)
 	{
-		return -2;
+		return CANNOT_OPEN_FILE;
 	}
 
 	int written = fwrite(content, 1, sizeof(content), file_ptr);
 	fclose(file_ptr);
 
 	return written;
+}
+
+int write_data_to_file(void *data, size_t len, char *file)
+{
+	if (data == NULL || len == 0 || file == NULL)
+	{
+		return INVALID_ARGUMENT;
+	}
+
+	FILE *f_ptr = fopen(file, "w");
+	if (f_ptr == NULL)
+	{
+		return CANNOT_OPEN_FILE;
+	}
+
+	fwrite(data, 1, len, f_ptr);
+	fclose(f_ptr);
+	return OK;
+}
+
+int load_data_from_file(char *file, void *data, size_t len)
+{
+	if (file == NULL || data == NULL)
+	{
+		return INVALID_ARGUMENT;
+	}
+
+	FILE *f_ptr = fopen(file, "r");
+	if (f_ptr == NULL)
+	{
+		return CANNOT_OPEN_FILE;
+	}
+
+	// read the file
+	fread(data, len, 1, f_ptr);
+	fclose(f_ptr);
+
+	return OK;
 }
