@@ -10,7 +10,11 @@ decision was driven by the desire to have portable executable. That will
 make a final executable bigger in size but it will be able to run 
 without worrying about runtime dependencies.
 
-libnpmcrypto
+The other way to use this library is to copy the header and source
+file directly into your project. Effort has been done to reduce 
+the dependencies between different source files.
+
+crypto
 -------------------------------------
 Based on the LibTomCrypt cryptographic library, this package contains a
 simplified code base. The goal is to let the developer choose the 
@@ -22,36 +26,55 @@ This library is ideal when all the source code needs to be included
 at compilation time and not having a distinct static library for crypto
 operation.
 
-*Ciphers*
-Advanced Encryption Standard (ECB, CBC modes)
+Ciphers
+- Advanced Encryption Standard (ECB, CBC modes)
 
-*Digest*
-MD5
-SHA1
-SHA256
-SHA512
+Digest
+- MD5
+- SHA1
+- SHA256
+- SHA512
 
-*Pseudo-Random Number Generation*
-Fortuna
+Pseudo-Random Number Generation
+- Fortuna
 
 
-libnpmtoolkit
--------------------------------------
-Provides a logger and a stringutils module. The logger follows the
-same concept as the logger in Android. It is possible to set the 
-verbosity level to control the amount of logs to be shown in the
-console. The stringutils provides common functions to manipulate 
-string, which can be cumbersome in C sometimes.
-
-To build the libraires, go to the libnpmtoolkit folder in a console
+To build the libraires, go to the crypto folder in a console
 and type:
 
-root> make install
+> make clean; make build
 
-A 'dist' folder is created and you just need to import the .a and the
-header file into your project.
+Copy the toolkit.a file with the header into your project.
 
-libnpmnetwork
+
+toolkit
+-------------------------------------
+Provides general purpose code to speed up development. The following
+component are available:
+
+FileUtils
+- Save/Load data structures to/from files.
+- Many utils function like read file content, get full path name, etc...
+
+Logger
+- Logger that produces useful log entry with timestamp and tag. Most be used with server application!
+
+Padding
+- Enables any content to be padded to fit a certain block size. Unpadding function also available.
+
+Conversion
+- Convert a hexadecimal string into a raw byte array.
+
+
+To build the libraires, go to the toolkit folder in a console
+and type:
+
+> make clean; make build
+
+Copy the toolkit.a file with the header into your project.
+
+
+network
 -------------------------------------
 Provides a server implmentation that create a server socket and
 start listening to a specific port on the host machine. This is 
@@ -60,12 +83,11 @@ to handle any incoming client connection. This design will let any
 developer to concentrate on the functionnality they want to offer 
 instead of having a lot of boilerplate code just to start the server.
 
-To build the librairies, go to the libnpmnetwork folder in a console
+To build the librairies, go to the network folder in a console
 and type:
 
-root> make install
+> make clean; make build
 
-A 'dist' folder is created and you just need to import the .a and the
-header file into your project.
+Copy the toolkit.a file with the header into your project.
 
  
