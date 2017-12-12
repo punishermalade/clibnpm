@@ -32,10 +32,9 @@
 
 /* this implementation uses loop to build a full path instead
    of using strcat or strcpy */
-int get_file_path(char *path, char *file, char out[])
+int get_file_path(char *path, char *file, char **out)
 {
-	int i;
-	size_t path_len, file_len, total_len;
+	size_t path_len, file_len;
 
 	if (path == NULL || file == NULL)
 	{
@@ -44,9 +43,8 @@ int get_file_path(char *path, char *file, char out[])
 
 	// need some sizes for appending
 	// need to count the separator at the end of the path
-	path_len = strlen(path) + 1;
+	path_len = strlen(path);
 	file_len = strlen(file);
-	total_len = path_len + file_len;
 
 	// size 0 is not good
 	if (path_len == 0 || file_len == 0)
@@ -54,22 +52,16 @@ int get_file_path(char *path, char *file, char out[])
 		return INVALID_ARGUMENT;
 	}
 
-	// need the NULL terminated character
-	for (i = 0; i < path_len; i++)
+	*out = (char *) malloc(sizeof(char) * (path_len + file_len + 1));
+	if (*out == NULL)
 	{
-		out[i] = *path;
-		path++;
+		return MALLOC_FAILED;
 	}
 
-	out[i++] = FILE_SEPARATOR;
+	strcat(*out, path);
+	strcat(*out, FILE_SEPARATOR);
+	strcat(*out, file);
 
-	for (; i < total_len; i++)
-	{
-		out[i] = *file;
-		file++;
-	}
-
-	out[i++] = NULL_TERMINATING;
 	return OK;
 }
 
@@ -128,4 +120,29 @@ int load_data_from_file(char *file, void *data, size_t len)
 	fclose(f_ptr);
 
 	return OK;
+}
+
+int read_file_content(FILE *file_ptr, unsigned char **output, size_t *out_len)
+{
+	// seeking the file size
+	fseek(file_ptr, 0L, SEEK_END);
+	*out_len = ftell(file_ptr);
+	fseek(file_ptr, 0L, SEEK_SET);
+
+	if (*out_len == 0)
+	{
+		return -2;
+	}
+
+	// dynamic allocation, read and set the cursor back to 0
+	*output = (unsigned char*) malloc(sizeof(unsigned char) * (*out_len));
+	if (*output == NULL)
+	{
+		return -1;
+	}
+
+	fread(*output, *out_len, 1, file_ptr);
+	fseek(file_ptr, 0L, SEEK_SET);
+
+	return 0;
 }

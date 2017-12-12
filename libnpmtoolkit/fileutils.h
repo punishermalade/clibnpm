@@ -29,8 +29,7 @@
 #define LIBNPMTOOLKIT_FILEUTILS_H_
 
 /* path separator and NULL terminating constant*/
-#define FILE_SEPARATOR '/'
-#define NULL_TERMINATING '\0'
+#define FILE_SEPARATOR "/"
 
 /* define some error code to be used by the calling function */
 enum {
@@ -38,14 +37,15 @@ enum {
 	INVALID_ARGUMENT,
 	CANNOT_OPEN_FILE,
 	CANNOT_WRITE_FILE,
-	CANNOT_SEEK_FILE
+	CANNOT_SEEK_FILE,
+	MALLOC_FAILED
 };
 
 /*
-   Build a full path to a file. Output parameters must be large enough to hold the
-   full path.
+   Build a full path to a file. The necessary memory will be
+   allocated to fit the complete path name.
 */
-int get_file_path(char *path, char *file, char out[]);
+int get_file_path(char *path, char *file, char **out);
 
 /*
     Append content to the end of the file.
@@ -76,5 +76,14 @@ int write_data_to_file(void *data, size_t len, char *file);
  * invalid pointer.
  */
 int load_data_from_file(char *file, void *data, size_t len);
+
+/*
+ * From a valid FILE* pointer, this function will allocated memory to the
+ * output parameter and fill it with the content of the file.
+ * @return: -1 if memory allocation fails, -2 if file is empty,
+ * 			otherwise returns 0
+ */
+int read_file_content(FILE *file_ptr, unsigned char **output, size_t *out_len);
+
 
 #endif /* LIBNPMTOOLKIT_FILEUTILS_H_ */
