@@ -1,6 +1,5 @@
-/*  Simple data manipulation program that demonstrate the conversion 
-    function from the toolkit.
-    
+/*  Implementation for conversion utility function
+
     MIT License
 
     Copyright (c) [2017] [Neilson P. Marcil]
@@ -24,45 +23,36 @@
     SOFTWARE. */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
-#include "../../toolkit/dist/include/convert.h"
-#include "../../toolkit/dist/include/logger.h"
+#include "convert.h"
 
-/* validate the number of arguments and the size of the input */
-void validate_arguments(int argc, char* argv[])
+int hexa_str_to_byte_array(const char *input, unsigned char *output)
 {
-    if (argc < 2)
+    size_t inputLen = 0;
+    size_t outputLen = 0;
+    int i;
+    
+    // checking the buffers
+    if (input == NULL || output == NULL)
     {
-        logmsg(LOGGER_ERROR, "Missing arguments");
-        exit(-1);
+        return -2;
     }
     
-    size_t argLen = strlen(argv[1]);
-    if (argLen % 2 != 0)
-    {
-        logmsg(LOGGER_ERROR, "Not a valid hexadecimal string, missing one character?");
-        exit(-2);
-    }
-}
-
-/* convert a hexadecimal string into a real byte array */
-int main(int argc, char* argv[])
-{
-    validate_arguments(argc, argv);
+    // checking the size of the input buffer
+    inputLen = strlen(input);
     
-    // everything is ok to succeed
-    const char *input = argv[1];
-    size_t inputLen = strlen(input);
-    size_t outputLen = inputLen / 2;
-    
-    int result;
-    unsigned char output[outputLen];
-    if ((result = hexa_str_to_byte_array(input, output)) != 0)
+    if (inputLen <= 0 || inputLen % 2 != 0)
     {
-        logmsg(LOGGER_FATAL, "Something happens during conversion: %d", result);
-        exit(result); 
+        return -1;
     }
-
-    print_byte_array(output, outputLen);
+    
+    // doing the conversion
+    outputLen = inputLen / 2;
+    for (i = 0; i < outputLen; i++)
+    {
+        sscanf(input + (i * 2), "%2hhx", &output[i]);
+    }
+    
     return 0;
 }

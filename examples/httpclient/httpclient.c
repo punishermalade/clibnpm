@@ -31,7 +31,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#include "../../libnpmnetwork/dist/include/client.h"
+#include "../../network/dist/include/client.h"
 
 int main(int argc, char* argv[])
 {   

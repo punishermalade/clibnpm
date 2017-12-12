@@ -29,8 +29,8 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include "../../libnpmtoolkit/dist/include/logger.h"
-#include "../../libnpmnetwork/dist/include/server.h"
+#include "../../toolkit/dist/include/logger.h"
+#include "../../network/dist/include/server.h"
 
 /* building the params from the command line */
 void set_options(int argc, char* argv[], struct serverparams *params, int *logenabled);
