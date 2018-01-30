@@ -91,3 +91,19 @@ int create_fingerprint_buffer(unsigned char **output, size_t *outlen, size_t len
 	return FP_SUCCESS;
 }
 
+int clear_fingerprint(size_t len, ...)
+{
+	int i;
+	va_list list;
+
+	va_start(list, len);
+	for (i = 0; i < len; i++)
+	{
+		fingerprint_item fpi = va_arg(list, fingerprint_item);
+		memset(fpi.fitem, 0, fpi.len);
+		fpi.len = 0;
+	}
+
+	va_end(list);
+	return FP_SUCCESS;
+}

@@ -58,4 +58,10 @@ int create_fingerprint_item(fingerprint_item *fi, unsigned char *data, size_t le
  */
 int create_fingerprint_buffer(unsigned char **output, size_t *outlen, size_t len, ...);
 
+/*
+ * clear the content of the fingerprint_items. Set the memory area to 0
+ * @param: len; number of fingerprint items to clear
+ */
+int clear_fingerprint(size_t len, ...);
+
 #endif /* LIBNPM_FINGERPRINT_H_ */
