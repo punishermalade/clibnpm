@@ -85,5 +85,21 @@ int load_data_from_file(char *file, void *data, size_t len);
  */
 int read_file_content(FILE *file_ptr, unsigned char **output, size_t *out_len);
 
+/*
+ * From a valid file_desc, this function will allocated memory to the output
+ * parameter and fill it with content of the file represented by the file
+ * descriptor.
+ * @return: -1 if memory allocation fails, -2 if file is empty,
+ * 		    otherwise returns 0
+ */
+int read_fd_content(int file_desc, unsigned char **output, size_t *out_len);
+
+/*
+ *	From a valid file_desc, this function will count the number of byte
+ *	represented by the file description.
+ *	@return: -1 if any error occurs, otherwise 0
+ */
+int read_fd_size(int file_desc, size_t *out_len);
+
 
 #endif /* LIBNPMTOOLKIT_FILEUTILS_H_ */

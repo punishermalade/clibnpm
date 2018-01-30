@@ -26,9 +26,13 @@
     SOFTWARE. */
 
 #include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include "fileutils.h"
+
+/* buffer size for read operation */
+#define DEFAULT_BUFFER 1024
 
 /* this implementation uses loop to build a full path instead
    of using strcat or strcpy */
@@ -144,5 +148,50 @@ int read_file_content(FILE *file_ptr, unsigned char **output, size_t *out_len)
 	fread(*output, *out_len, 1, file_ptr);
 	fseek(file_ptr, 0L, SEEK_SET);
 
+	return 0;
+}
+
+int read_fd_content(int fd, unsigned char **output, size_t *out_len)
+{
+    unsigned char buffer[DEFAULT_BUFFER];
+    unsigned char *temp = NULL;
+    size_t byte_read, total_byte_read;
+
+    memset(&buffer, 0, DEFAULT_BUFFER);
+    byte_read = 0;
+    total_byte_read = 0;
+
+    while ((byte_read = read(fd, buffer, DEFAULT_BUFFER)) > 0)
+    {
+        temp = realloc(*output, total_byte_read + byte_read);
+        if (temp == NULL)
+        {
+        		return -1;
+        }
+
+        memcpy(temp + total_byte_read, buffer, byte_read);
+        *output = temp;
+        total_byte_read += byte_read;
+    }
+
+    *out_len = total_byte_read;
+    return 0;
+}
+
+int read_fd_size(int fd, size_t *out_len)
+{
+	size_t total_byte_read, byte_read;
+	unsigned char buffer[DEFAULT_BUFFER];
+
+	total_byte_read = 0;
+	byte_read = 0;
+	memset(buffer, 0, DEFAULT_BUFFER);
+
+	while ((byte_read = read(fd, buffer, DEFAULT_BUFFER)) > 0)
+	{
+		total_byte_read += byte_read;
+	}
+
+	*out_len = total_byte_read;
 	return 0;
 }
